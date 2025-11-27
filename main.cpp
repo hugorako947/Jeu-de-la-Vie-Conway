@@ -3,7 +3,7 @@
 #include "fichiers.h"
 #include "regles.h"
 #include "grille.h"
-
+coucou;
 int main(){
     std::string chemin;
     std::cout << "----------Jeu de la vie----------" << std::endl;
