@@ -21,4 +21,3 @@ public :
 	void appliquerProchainEtat(); // Méthode pour définir 'etat = prochainEtat'
 	bool estVivante() const;
 };
-//pas mal pas mal
