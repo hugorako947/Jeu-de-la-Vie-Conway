@@ -1,6 +1,8 @@
+#pragma once
 #include "Etat_cellule.hpp"
 #include "Regles.hpp"
-class Etat_vivant : public Etat_cellule {
+
+class Etat_vivant : public Etat_cellule{
 public: 
 	~Etat_vivant() override = default; 
 	bool estVivante() const override; //méthode héritée
