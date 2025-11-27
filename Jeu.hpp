@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include "grille.h"
-#include "regles.h"
+#include "Grille.hpp"
+#include "Regles.hpp"
 
 class JeuDeLaVie{
 private:
