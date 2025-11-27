@@ -1,7 +1,10 @@
+#pragma once
 #include "Etat_cellule.hpp"
+
 class ReglesConway;
 class Grille;
-class Cellule {
+
+class Cellule{
 private: 
 	int x; 
 	int y; 
