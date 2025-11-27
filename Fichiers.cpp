@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "fichiers.h"
+#include "Fichiers.hpp"
 
 Fichiers::Fichiers(std::string c) : chemin(c), lignes(0), colonnes(0) {}
 
