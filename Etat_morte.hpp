@@ -1,7 +1,8 @@
-
+#pragma once
 #include "Etat_cellule.hpp" 
-#include "ReglesConway.hpp"
-class Etat_morte : public Etat_cellule {
+#include "Regles.hpp"
+
+class Etat_morte : public Etat_cellule{
 public:
     ~Etat_morte() override = default;
     // Implémentation de la méthode héritée (retourne toujours faux)
