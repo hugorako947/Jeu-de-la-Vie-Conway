@@ -1,8 +1,8 @@
 #include <iostream>
-#include "jeu.h"
-#include "fichiers.h"
-#include "regles.h"
-#include "grille.h"
+#include "Jeu.hpp"
+#include "Fichiers.hpp"
+#include "Regles.hpp"
+#include "Grille.hpp"
 
 int main(){
     std::string chemin;
