@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 
-class Fichiers {
+class Fichiers{
 private:
     std::string chemin;
     int lignes;
