@@ -1,57 +1,56 @@
 #include <iostream>
-#include <fstream>
-#include <sstream>
+#include <stdexcept>
 #include "Fichiers.hpp"
+#include <string>
+#include <sstream>
+ 
+namespace JeuDeLaVie {
 
 Fichiers::Fichiers(std::string c) : chemin(c), lignes(0), colonnes(0) {}
-
-int** Fichiers::lire(){
+ 
+std::vector<int> Fichiers::lire(){
     std::ifstream fichier(chemin);
-    
+    std::vector<int> donnees_1d;
+ 
     if (!fichier.is_open()){
         throw std::runtime_error("Erreur : impossible d'ouvrir le fichier " + chemin);
     }
-    
+
     std::string ligne;
 
     if (std::getline(fichier, ligne)){
         std::istringstream iss(ligne);
         if (!(iss >> lignes >> colonnes)){
-            throw std::runtime_error("Erreur : format de dimensions invalide");
+            throw std::runtime_error("Erreur : format de dimensions invalide (première ligne)");
         }
     }else{
         throw std::runtime_error("Erreur : fichier vide");
     }
 
-    int** grille = new int*[lignes];
-    for (int i = 0; i < lignes; i++){
-        grille[i] = new int[colonnes];
-    }
+    int total_cells = lignes * colonnes;
+    int cells_read = 0;
+    int etat_cellule;
 
-    int ligne_actuelle = 0;
-    
-    while (std::getline(fichier, ligne) && ligne_actuelle < lignes){
-        std::istringstream iss(ligne);
-        for (int col = 0; col < colonnes; col++){
-            if (!(iss >> grille[ligne_actuelle][col])){
-                throw std::runtime_error("Erreur : donnée manquante à la ligne " + std::to_string(ligne_actuelle + 1));
-            }
+    while (fichier >> etat_cellule && cells_read < total_cells){
+        if (etat_cellule != 0 && etat_cellule != 1){
+            throw std::runtime_error("Erreur : donnée de cellule invalide (doit être 0 ou 1).");
         }
-        ligne_actuelle++;
+        donnees_1d.push_back(etat_cellule);
+        cells_read++;
     }
-
-    if (ligne_actuelle != lignes){
-        throw std::runtime_error("Erreur : nombre de lignes incohérent");
+    if (cells_read != total_cells){
+        throw std::runtime_error("Erreur : nombre total de cellules incohérent. Attendu : " + 
+        std::to_string(total_cells) + ", Lu : " + std::to_string(cells_read));
     }
-    
     fichier.close();
-    return grille;
+    return donnees_1d;
 }
 
-int Fichiers::getLignes() const{
+int Fichiers::getLignes() const {
     return lignes;
 }
 
-int Fichiers::getColonnes() const{
+int Fichiers::getColonnes() const {
     return colonnes;
+}
 }
