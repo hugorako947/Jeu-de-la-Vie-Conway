@@ -1,33 +1,19 @@
+#pragma once
 #include <iostream>
-#include "Jeu.hpp"
-#include "Fichiers.hpp"
+#include "Grille.hpp"
 
 namespace JeuDeLaVie {
 
-JeuDeLaVie::JeuDeLaVie(std::string c, bool mc, int im) : chemin(c), mode_console(mc), iterations_max(im) {}
+class JeuDeLaVie{
+private:
+    bool mode_console;
+    int iterations_max;
+    std::string chemin;
+public:
+    JeuDeLaVie(std::string c, bool mc, int im);
 
-void JeuDeLaVie::simulation(){
-    Fichiers fichier(chemin);
+    void simulation();
 
-}
-
-bool JeuDeLaVie::stabilite(){
-    return true;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    bool stabilite();
+};
 }
