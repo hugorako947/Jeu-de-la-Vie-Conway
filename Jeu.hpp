@@ -1,20 +1,33 @@
-#pragma once
 #include <iostream>
-#include "Grille.hpp"
-#include "Regles.hpp"
+#include "Jeu.hpp"
+#include "Fichiers.hpp"
 
-class JeuDeLaVie{
-private:
-    Grille grille;
-    ReglesConway* regles;
-    bool mode_console;
-    int iterations_max;
-public:
-    JeuDeLaVie(Grille g, ReglesConway* r, bool mc, int im);
+namespace JeuDeLaVie {
 
-    void simulation(std::string chemin);
+JeuDeLaVie::JeuDeLaVie(std::string c, bool mc, int im) : chemin(c), mode_console(mc), iterations_max(im) {}
 
-    void iterations();
+void JeuDeLaVie::simulation(){
+    Fichiers fichier(chemin);
 
-    bool stabilite();
-};
+}
+
+bool JeuDeLaVie::stabilite(){
+    return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
