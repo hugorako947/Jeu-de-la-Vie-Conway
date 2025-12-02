@@ -1,23 +1,28 @@
-#pragma once
-#include <iostream>
-namespace JeuDeLaVie {
+    #pragma once
+    #include "Etat.hpp"
+    #include <memory> 
+    #include <vector> 
 
-    class Cellule {
-    private:
-        bool est_vivante;
-        bool prochain_etat_vivant;
-    public:
-        // Constructeur par défaut : la cellule est Morte (false) à la création.
-        Cellule();
-        // Utilisé par Grille::compterVoisinesVivantes et Cellule::afficher
-        bool estVivante() const;
-        void setEtatVivant();
-        void setEtatMort();
+    namespace JeuDeLaVie {
+        class Grille;
+        class Cellule {
+        private:
+            // Utilisation de unique_ptr : la Cellule est l'unique propriétaire de ses objets d'état.
+            std::unique_ptr<Etat_cellule> etat_actuel;
+            std::unique_ptr<Etat_cellule> prochain_etat;
 
-        // Simplifie le calcul de l'état futur (sera appelée par Grille::mettreAJour).
-        void calculerProchainEtat(int nb_voisines_vivantes);
-        // Applique le nouvel état calculé (sera appelée par Grille::mettreAJour).
-        void appliquerProchainEtat();
-    };
+        public:
+            // Constructeur par défaut (Morte par défaut)
+            Cellule();
+            bool estVivante() const;
+            void setEtatVivant();
+            void setEtatMort();
 
-} 
+            // CALCULE LE PROCHAIN ÉTAT (la Cellule délègue le calcul à l'état actuel)
+            void calculerProchainEtat(int nb_voisins);
+
+            // APPLIQUE LE PROCHAIN ÉTAT (échange l'état futur avec l'état actuel)
+            void appliquerProchainEtat();
+        };
+
+    }
