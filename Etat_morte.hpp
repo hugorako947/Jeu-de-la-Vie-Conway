@@ -1,12 +1,17 @@
 #pragma once
-#include "Etat_cellule.hpp" 
-#include "Regles.hpp"
+#include "Etat_cellule.hpp"
 
-class Etat_morte : public Etat_cellule{
-public:
-    ~Etat_morte() override = default;
-    // Implémentation de la méthode héritée (retourne toujours faux)
-    bool estVivante() const override;
-    // Implémentation de la méthode héritée : détermine le nouvel état basé sur les règles
-    Etat_cellule* determinerProchainEtat(int nbVoisins, const ReglesConway& regles) override;
-};
+namespace JeuDeLaVie {
+
+    class EtatMort : public Etat_cellule {
+    public:
+        EtatMort() = default; // Constructeur maintenant public
+        ~EtatMort() override = default;
+
+        bool estVivante() const override;
+
+        // Retourne un std::unique_ptr
+        std::unique_ptr<Etat_cellule> determinerProchainEtat(int nbVoicins) override;
+    };
+
+}
