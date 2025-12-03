@@ -2,13 +2,11 @@
 #include "Jeu.hpp"
 #include "Grille.hpp"
 #include "Cellule.hpp"
-#include "Etat_cellule.hpp"
-#include "Etat_vivant.hpp"
-#include "Etat_morte.hpp"
+#include "Etat.hpp"
+#include "EtatVivant.hpp"
+#include "EtatMort.hpp"
 #include "Regles.hpp"
 #include "Fichiers.hpp"
-
-namespace JeuDeLaVie {
 
 int main(){
     std::string chemin;
@@ -16,11 +14,17 @@ int main(){
     bool mode_console;
     char choix2;
     int iterations_max = 0;
+    double pause;
 
-    std::cout << "----------Jeu de la vie----------" << std::endl;
+    std::cout << "" << std::endl;
+    std::cout << "------------------JEU DE LA VIE------------------" << std::endl;
+    std::cout << "" << std::endl;
+
     std::cout << "Chemin de la grille initiale: "; std::cin >> chemin;
-    std::cout << "Mode console ou graphique ? (c/g): "; std::cin >> choix1;
+    JeuDeLaVie::Fichiers fichier(chemin);
+    fichier.lire();
 
+    std::cout << "Mode console ou graphique ? (c/g): "; std::cin >> choix1;
     if (choix1 == 'c'){
         mode_console = true;
     }
@@ -28,25 +32,33 @@ int main(){
         mode_console = false;
     }
     else{
-        throw std::runtime_error("Erreur : mode invalide");
+        std::cout << "\nERREUR : Mode invalide !\n" << std::endl;
+        return 0;
     }
 
     std::cout << "Voulez-vous un nombre d'iterations predefinis ? (y/n): "; std::cin >> choix2;
-
     if (choix2 == 'y'){
         std::cout << "Nombre d'iterations: "; std::cin >> iterations_max;
+        if (std::cin.fail()){
+            std::cout << "\nERREUR : Valeur invalide !\n" << std::endl;
+            return 0;
+        }
     }
     else{
         if (choix2 != 'n'){
-            throw std::runtime_error("Erreur : reponse invalide");
+            std::cout << "\nERREUR : Reponse invalide !\n" << std::endl;
+            return 0;
         }
     }
 
-    std::cout << "Chargement du jeu reussi..." << std::endl;
+    std::cout << "Temps de pause entre chaques iterations (secondes): "; std::cin >> pause;
+    if (std::cin.fail()){
+        std::cout << "\nERREUR : Valeur invalide !\n" << std::endl;
+        return 0;
+    }
 
-    JeuDeLaVie jeu(chemin, mode_console, iterations_max);
+    Jeu jeu(chemin, mode_console, iterations_max, pause);
     jeu.simulation();
 
     return 0;
-}
 }
