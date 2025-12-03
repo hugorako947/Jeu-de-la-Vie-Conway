@@ -4,17 +4,17 @@
 #include <algorithm>  // Pour std::find
 #include <windows.h> // Pour l'utilisation de la fonction Sleep() ce qui gère les pauses entre chaque itérations
 #include "Jeu.hpp"
-#include "Fichiers.hpp"
+#include "Fichier.hpp"
 #include "Grille.hpp"
 #include "Cellule.hpp"
 #include "EtatVivant.hpp"
 #include "EtatMort.hpp"
 
-Jeu::Jeu(std::string c, bool mc, int im, double p) : chemin(c), mode_console(mc), iterations_max(im), pause(p) {}
+Jeu::Jeu(std::string ci, bool mc, int im, double p, std::string co) : chemin_input(ci), mode_console(mc), iterations_max(im), pause(p), chemin_output(co) {}
 
 void Jeu::simulation(){
     try{
-        JeuDeLaVie::Fichiers fichier(chemin);
+        JeuDeLaVie::Fichiers fichier(chemin_input, chemin_output);
         std::vector<int> donnees1D = fichier.lire();
         int lignes = fichier.getLignes();
         int colonnes = fichier.getColonnes();
@@ -64,6 +64,7 @@ void Jeu::simulation(){
                     std::cout << "\nETAT INITIAL" << std::endl;
                 }
                 std::cout << etat_actuel;
+                fichier.ecrire(etat_actuel, iteration);
             }
 
             stable = stabilite(etat_actuel);
@@ -80,14 +81,13 @@ void Jeu::simulation(){
         }
         
         std::cout << "\nFIN DU JEU...\n" << std::endl;
-        std::cout << "Nombre d'iterations: " << iteration-1 << std::endl;
         
         if (stable && iterations_max == 0){
             std::cout << "Raison: grille stable (plus d'evolution)" << std::endl;
         }else if (iterations_max > 0){
             std::cout << "Raison: nombre maximum d'iterations atteint" << std::endl;
         }
-        std::cout << "" << std::endl;
+        std::cout << "Nombre d'iterations: " << iteration-1 << "\n" << std::endl;
         
     }
     catch (const std::exception& e){
