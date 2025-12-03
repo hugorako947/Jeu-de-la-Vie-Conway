@@ -6,10 +6,11 @@
 #include "EtatVivant.hpp"
 #include "EtatMort.hpp"
 #include "Regles.hpp"
-#include "Fichiers.hpp"
+#include "Fichier.hpp"
 
 int main(){
-    std::string chemin;
+    std::string chemin_input;
+    std::string chemin_output;
     char choix1;
     bool mode_console;
     char choix2;
@@ -20,13 +21,14 @@ int main(){
     std::cout << "------------------JEU DE LA VIE------------------" << std::endl;
     std::cout << "" << std::endl;
 
-    std::cout << "Chemin de la grille initiale: "; std::cin >> chemin;
-    JeuDeLaVie::Fichiers fichier(chemin);
+    std::cout << "Chemin de la grille initiale: "; std::cin >> chemin_input;
+    JeuDeLaVie::Fichiers fichier(chemin_input, chemin_output);
     fichier.lire();
 
     std::cout << "Mode console ou graphique ? (c/g): "; std::cin >> choix1;
     if (choix1 == 'c'){
         mode_console = true;
+        std::cout << "Chemin des grilles de chaque iterations: "; std::cin >> chemin_output;
     }
     else if (choix1 == 'g'){
         mode_console = false;
@@ -57,7 +59,7 @@ int main(){
         return 0;
     }
 
-    Jeu jeu(chemin, mode_console, iterations_max, pause);
+    Jeu jeu(chemin_input, mode_console, iterations_max, pause, chemin_output);
     jeu.simulation();
 
     return 0;
