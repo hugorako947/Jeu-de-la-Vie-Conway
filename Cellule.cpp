@@ -2,17 +2,27 @@
 #include "EtatMort.hpp" 
 #include "Etatvivant.hpp"
 #include "Etat.hpp"
-#include <memory> 
+#include <memory>
 
 namespace JeuDeLaVie {
 
     // CONSTRUCTEUR
     // Initialise la cellule par défaut à l'état Mort.
-    Cellule::Cellule()
-        // Utilise std::make_unique pour créer le premier objet d'état
-        : etat_actuel(std::make_unique<EtatMort>()),
-        prochain_etat(nullptr) // L'état futur est initialisé à null
-    {
+    Cellule::Cellule() : etat_actuel(std::make_unique<EtatMort>()), prochain_etat(nullptr) {} // Utilise std::make_unique pour créer le premier objet d'état // L'état futur est initialisé à null
+
+    // Constructeur par déplacement
+    Cellule::Cellule(Cellule&& autre) noexcept
+        : etat_actuel(std::move(autre.etat_actuel)),
+          prochain_etat(std::move(autre.prochain_etat)) {
+    }
+
+    // Opérateur d'affectation par déplacement
+    Cellule& Cellule::operator=(Cellule&& autre) noexcept {
+        if (this != &autre) {
+            etat_actuel = std::move(autre.etat_actuel);
+            prochain_etat = std::move(autre.prochain_etat);
+        }
+        return *this;
     }
 
     // ACCESSEURS
