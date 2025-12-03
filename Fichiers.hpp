@@ -2,17 +2,20 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
 
-class Fichiers{
-private:
-    std::string chemin;
-    int lignes;
-    int colonnes;
-public:
-    Fichiers(std::string c);
+namespace JeuDeLaVie {
+    class Fichiers{
+    private:
+        std::string chemin;
+        int lignes;
+        int colonnes;
+    public:
+        Fichiers(std::string c);
 
-    int** lire();
-    
-    int getLignes() const;
-    int getColonnes() const;
-};
+        std::vector<int> lire();
+        
+        int getLignes() const;
+        int getColonnes() const;
+    };
+}
