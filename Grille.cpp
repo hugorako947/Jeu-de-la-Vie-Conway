@@ -44,31 +44,39 @@ namespace JeuDeLaVie {
         return cellules.at(getIndex(l, c, colonnes));
     }
 
-  
-//méthode pour initialiser la grille 
+    //méthode pour initialiser la grille
     void Grille::initialiser(const std::vector<Cellule>& g) {
         if (g.size() == cellules.size()) {
-            // Créez une copie de travail modifiable
-            std::vector<Cellule> temp_g = g;
-
-            // Déplacez chaque élément de temp_g vers cellules
+            // On ne peut pas copier, donc on doit recréer
             for (size_t i = 0; i < cellules.size(); ++i) {
-                cellules[i] = std::move(temp_g[i]); 
+                // Créer une nouvelle cellule avec le même état
+                Cellule nouvelleCellule;
+                if (g[i].estVivante()) {
+                    nouvelleCellule.setEtatVivant();
+                } else {
+                    nouvelleCellule.setEtatMort();
+                }
+                cellules[i] = std::move(nouvelleCellule);  // Déplacement
             }
         }
     }
 
     std::string Grille::afficher() const {
-        std::string resultat = "";
+        std::string resultat;
         for (int l = 0; l < lignes; ++l) {
             for (int c = 0; c < colonnes; ++c) {
                 const Cellule& cell = get_cellule(l, c);
-                resultat += cell.estVivante() ? "█ " : "░ ";
+                if (cell.estVivante()) {
+                    resultat += "1"; 
+                }else{
+                    resultat += "0";
+                }
             }
             resultat += "\n";
         }
         return resultat;
     }
+                
 
     int Grille::compterVoisinesVivantes(int l, int c) const {
         int count = 0;
@@ -111,4 +119,4 @@ namespace JeuDeLaVie {
         }
     }
 
-} 
+}
