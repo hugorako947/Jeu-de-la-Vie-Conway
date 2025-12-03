@@ -1,5 +1,5 @@
 #include "EtatVivant.hpp"
-#include "Etat_cellule.hpp"
+#include "Etat.hpp"
 #include "EtatMort.hpp" // Nécessaire pour créer l'état mort
 #include <memory>
 
