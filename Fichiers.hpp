@@ -5,18 +5,19 @@
 #include <vector>
 
 namespace JeuDeLaVie {
-    class Fichiers {
+    class Fichiers{
     private:
-        std::string chemin;
+        std::string chemin_input;
+        std::string chemin_output;
         int lignes;
         int colonnes;
     public:
-        Fichiers(std::string c);
+        Fichiers(std::string ci, std::string co);
 
         std::vector<int> lire();
-        // Méthode pour créer le dossier et écrire l'état de la grille
-        void ecrire(const std::string etat, int iteration) const;
 
+        void ecrire(const std::string& etat, int iteration) const;
+        
         int getLignes() const;
         int getColonnes() const;
     };
