@@ -1,14 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include <algorithm>  // Pour std::find
-#include <windows.h> // Pour l'utilisation de la fonction Sleep() ce qui gère les pauses entre chaque itérations
+#include <windows.h> // Pour la fonction Sleep()
 #include "Jeu.hpp"
 #include "Fichier.hpp"
 #include "Grille.hpp"
 #include "Cellule.hpp"
 #include "EtatVivant.hpp"
 #include "EtatMort.hpp"
+#include "Tests.hpp"
 
 Jeu::Jeu(std::string ci, bool mc, int im, double p, std::string co) : chemin_input(ci), mode_console(mc), iterations_max(im), pause(p), chemin_output(co) {}
 
@@ -47,11 +47,11 @@ void Jeu::simulation(){
         bool stable = false;
         
         while (true) {
-            if (stable && iterations_max == 0){
+            if (stable){
                 break;
             }
             
-            if (iterations_max > 0 && iteration >= iterations_max + 1){
+            if (iteration == iterations_max + 1){
                 break;
             }
             
@@ -75,20 +75,20 @@ void Jeu::simulation(){
             
             iteration++;
             
-            if (iteration <= iterations_max || iterations_max == 0){
-                Sleep(static_cast<DWORD>(pause * 1000));
-            }
+            Sleep(static_cast<DWORD>(pause * 1000));
         }
         
         std::cout << "\nFIN DU JEU...\n" << std::endl;
-        
-        if (stable && iterations_max == 0){
-            std::cout << "Raison: grille stable (plus d'evolution)" << std::endl;
-        }else if (iterations_max > 0){
-            std::cout << "Raison: nombre maximum d'iterations atteint" << std::endl;
+        std::cout << "Nombre d'iterations: " << iteration-1 << std::endl;
+        if (stable && iteration == iterations_max + 1){
+            std::cout << "Raison: grille stable (plus d'evolution) + nombre maximum d'iterations atteint\n" << std::endl;
         }
-        std::cout << "Nombre d'iterations: " << iteration-1 << "\n" << std::endl;
-        
+        else if (stable && iteration < iterations_max + 1){
+            std::cout << "Raison: grille stable (plus d'evolution)\n" << std::endl;
+        }
+        else if (!stable && iteration == iterations_max + 1){
+            std::cout << "Raison: nombre maximum d'iterations atteint\n" << std::endl;
+        }
     }
     catch (const std::exception& e){
         std::cerr << "Erreur dans la simulation : " << e.what() << std::endl;
@@ -112,4 +112,67 @@ bool Jeu::stabilite(const std::string& etat_actuel){
     }
     
     return false;
+}
+
+void Jeu::tests_unitaires() {
+    try {
+        std::cout << "\nDEBUT DES TESTS...\n" << std::endl;
+        
+        double tests_reussis = 0;
+        double total_tests = 5;
+        
+        JeuDeLaVie::TestsUnitaires grille_vide("tests/grille_vide_depart.txt", "tests/grille_vide_depart.txt", 5);
+        if (grille_vide.estValide()){
+            std::cout << "[OK] Grille vide reste vide sur: 5 iterations" << std::endl;
+            tests_reussis++;
+        }
+        else{
+            std::cout << "[ECHEC] Grille vide" << std::endl;
+        }
+        JeuDeLaVie::TestsUnitaires bloc_stable("tests/bloc_stable_depart.txt", "tests/bloc_stable_depart.txt", 10);
+        if (bloc_stable.estValide()){
+            std::cout << "[OK] Bloc reste stable sur: 10 iterations" << std::endl;
+            tests_reussis++;
+        }
+        else{
+            std::cout << "[ECHEC] Bloc stable" << std::endl;
+        }
+        JeuDeLaVie::TestsUnitaires clignotant1("tests/clignotant_depart.txt", "tests/clignotant_attendu.txt", 1);
+        if (clignotant1.estValide()){
+            std::cout << "[OK] Clignotant apres: 1 iteration" << std::endl;
+            tests_reussis++;
+        }
+        else{
+            std::cout << "[ECHEC] Clignotant apres: 1 iteration" << std::endl;
+        }
+        JeuDeLaVie::TestsUnitaires clignotant2("tests/clignotant_depart.txt", "tests/clignotant_depart.txt", 2);
+        if (clignotant2.estValide()){
+            std::cout << "[OK] Clignotant apres: 2 iterations" << std::endl;
+            tests_reussis++;
+        }
+        else{
+            std::cout << "[ECHEC] Clignotant apres: 2 iterations" << std::endl;
+        }
+        JeuDeLaVie::TestsUnitaires planeur("tests/planeur_depart.txt", "tests/planeur_attendu.txt", 4);
+        if (planeur.estValide()){
+            std::cout << "[OK] Planeur (glider) sur: 4 iterations" << std::endl;
+            tests_reussis++;
+        }
+        else{
+            std::cout << "[ECHEC] Planeur (glider)" << std::endl;
+        }
+        
+        std::cout << "\nFIN DES TESTS...\n" << std::endl;
+        if (tests_reussis == total_tests){
+            std::cout << "Les regles de Conway sont correctement implementees\n" << std::endl;
+        }
+        else{
+            std::cout << "Les regles de Conway sont mal implementees\n" << std::endl;
+        }
+        double pourcentage = tests_reussis / total_tests * 100;
+        std::cout << "Tests reussis: " << tests_reussis << "/" << total_tests << " (" << pourcentage << " %)\n" << std::endl;
+    }
+    catch (const std::exception& e){
+        std::cerr << "\nErreur dans les tests: " << e.what() << std::endl;
+    }
 }
