@@ -9,58 +9,50 @@
 #include "Fichier.hpp"
 
 int main(){
-    std::string chemin_input;
-    std::string chemin_output;
-    char choix1;
-    bool mode_console;
-    char choix2;
-    int iterations_max = 0;
-    double pause;
+    char choix3;
 
-    std::cout << "" << std::endl;
-    std::cout << "------------------JEU DE LA VIE------------------" << std::endl;
-    std::cout << "" << std::endl;
+    std::cout << "\n------------------JEU DE LA VIE------------------\n" << std::endl;
 
-    std::cout << "Chemin de la grille initiale: "; std::cin >> chemin_input;
-    JeuDeLaVie::Fichiers fichier(chemin_input, chemin_output);
-    fichier.lire();
+    std::cout << "Voulez-vous lancer la simulation ou les tests unitaires ? (s/t): "; std::cin >> choix3;
 
-    std::cout << "Mode console ou graphique ? (c/g): "; std::cin >> choix1;
-    if (choix1 == 'c'){
-        mode_console = true;
-        std::cout << "Chemin des grilles de chaque iterations: "; std::cin >> chemin_output;
-    }
-    else if (choix1 == 'g'){
-        mode_console = false;
-    }
-    else{
-        std::cout << "\nERREUR : Mode invalide !\n" << std::endl;
-        return 0;
-    }
+    if (choix3 == 's'){
+        std::string chemin_input;
+        std::string chemin_output = "output/";
+        char choix1;
+        bool mode_console;
+        char choix2;
+        int iterations_max = 200;
+        double pause = 0;
 
-    std::cout << "Voulez-vous un nombre d'iterations predefinis ? (y/n): "; std::cin >> choix2;
-    if (choix2 == 'y'){
-        std::cout << "Nombre d'iterations: "; std::cin >> iterations_max;
-        if (std::cin.fail()){
-            std::cout << "\nERREUR : Valeur invalide !\n" << std::endl;
+        std::cout << "\nChemin de la grille initiale: "; std::cin >> chemin_input;
+        JeuDeLaVie::Fichiers fichier(chemin_input, chemin_output);
+        fichier.lire();
+
+        std::cout << "Mode console ou graphique ? (c/g): "; std::cin >> choix1;
+        if (choix1 == 'c'){
+            mode_console = true;
+        }
+        else if (choix1 == 'g'){
+            mode_console = false;
+        }
+        else{
+            std::cout << "\nERREUR : Mode invalide !\n" << std::endl;
             return 0;
         }
+
+        Jeu jeu(chemin_input, mode_console, iterations_max, pause, chemin_output);
+        jeu.simulation();
+
+    }
+    else if (choix3 == 't'){
+
+        Jeu jeu("", true, 0, 0, "");
+        jeu.tests_unitaires();
+
     }
     else{
-        if (choix2 != 'n'){
-            std::cout << "\nERREUR : Reponse invalide !\n" << std::endl;
-            return 0;
-        }
-    }
-
-    std::cout << "Temps de pause entre chaques iterations (secondes): "; std::cin >> pause;
-    if (std::cin.fail()){
-        std::cout << "\nERREUR : Valeur invalide !\n" << std::endl;
+        std::cout << "\nERREUR : Reponse invalide !\n" << std::endl;
         return 0;
     }
-
-    Jeu jeu(chemin_input, mode_console, iterations_max, pause, chemin_output);
-    jeu.simulation();
-
     return 0;
 }
