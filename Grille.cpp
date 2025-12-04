@@ -67,9 +67,9 @@ namespace JeuDeLaVie {
             for (int c = 0; c < colonnes; ++c) {
                 const Cellule& cell = get_cellule(l, c);
                 if (cell.estVivante()) {
-                    resultat += "1"; 
+                    resultat += "1 "; 
                 }else{
-                    resultat += "0";
+                    resultat += "0 ";
                 }
             }
             resultat += "\n";
