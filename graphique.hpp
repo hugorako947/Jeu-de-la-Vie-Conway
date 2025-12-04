@@ -28,14 +28,6 @@ namespace JeuDeLaVie {
         JeuGraphique(const std::string& chemin_fichier, float pause_sec);
         void executer();
 
-        // --- CORRECTION DES GETTERS ---
-        // ?? Ces fonctions ne sont pas nécessaires car lignes/colonnes sont déjà membres privés.
-        // Vous devez utiliser directement les membres 'lignes' et 'colonnes' dans JeuGraphique.cpp.
-        // Si vous les voulez publiques, retirez les paramètres.
-
-        // Si vous voulez les laisser:
-        // int getLignes() const;  
-        // int getColonnes() const;
     };
 
 }
