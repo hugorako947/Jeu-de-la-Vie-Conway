@@ -22,7 +22,7 @@ int main(){
         char choix2;
         bool mode_console;
         int iterations_max = 200;
-        double pause = 0;
+        double pause = 0.5;
 
         std::cout << "\nChemin de la grille initiale: "; std::cin >> chemin_input;
         JeuDeLaVie::Fichiers fichier(chemin_input, chemin_output);
