@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include <windows.h> // Pour la fonction Sleep()
+#include <chrono>    // Pour std::chrono
+#include <thread>    // Pour std::this_thread::sleep_for
 #include "Jeu.hpp"
 #include "Fichier.hpp"
 #include "Grille.hpp"
@@ -9,6 +10,7 @@
 #include "EtatVivant.hpp"
 #include "EtatMort.hpp"
 #include "Tests.hpp"
+#include "Graphique.hpp"
 
 Jeu::Jeu(std::string ci, bool mc, int im, double p, std::string co) : chemin_input(ci), mode_console(mc), iterations_max(im), pause(p), chemin_output(co) {}
 
@@ -19,7 +21,7 @@ void Jeu::simulation(){
         int lignes = fichier.getLignes();
         int colonnes = fichier.getColonnes();
 
-        std::cout << "\nDEBUT DU JEU..." << std::endl;
+        std::cout << "\nDEBUT DU JEU...\n" << std::endl;
 
         // 2. Créer un vecteur temporaire de cellules
         std::vector<JeuDeLaVie::Cellule> cellulesInitiales;
@@ -43,6 +45,17 @@ void Jeu::simulation(){
         JeuDeLaVie::Grille grille(lignes, colonnes);
         grille.initialiser(cellulesInitiales);
 
+        std::unique_ptr<JeuDeLaVie::JeuGraphique> jeuGraphique = nullptr;
+        if (!mode_console) {
+            try {
+                jeuGraphique = std::make_unique<JeuDeLaVie::JeuGraphique>(lignes, colonnes);
+            } catch (const std::exception& e) {
+                std::cerr << "\nErreur mode graphique: " << e.what() << std::endl;
+                std::cout << "Basculer en mode console...\n" << std::endl;
+                mode_console = true; // Basculer en mode console
+            }
+        }
+
         int iteration = 0;
         bool stable = false;
         
@@ -58,13 +71,21 @@ void Jeu::simulation(){
             std::string etat_actuel = grille.afficher();
             if (mode_console){
                 if (iteration != 0){
-                    std::cout << "\nITERATION " << iteration << std::endl;
+                    std::cout << "ITERATION " << iteration << std::endl;
                 }
                 else{
-                    std::cout << "\nETAT INITIAL" << std::endl;
+                    std::cout << "ETAT INITIAL" << std::endl;
                 }
                 std::cout << etat_actuel;
                 fichier.ecrire(etat_actuel, iteration);
+                std::cout << "\n";
+            }
+            else if (jeuGraphique != nullptr) {
+                jeuGraphique->mettreAJourAffichage(grille);
+
+                if (!jeuGraphique->fenetreEstOuverte()) {
+                    break;
+                }
             }
 
             stable = stabilite(etat_actuel);
@@ -75,20 +96,27 @@ void Jeu::simulation(){
             
             iteration++;
             
-            Sleep(static_cast<DWORD>(pause * 1000));
+            if (pause > 0) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(pause * 1000)));
+            }
         }
 
-        std::cout << "\nFIN DU JEU...\n" << std::endl;
-        std::cout << "Nombre d'iterations: " << iteration-1 << std::endl;
+        if (jeuGraphique != nullptr) {
+            jeuGraphique->fermer();
+        }
+
+        std::cout << "FIN DU JEU...\n" << std::endl;
         if (stable && iteration == iterations_max + 1){
-            std::cout << "Raison: grille stable (plus d'evolution) + nombre maximum d'iterations atteint\n" << std::endl;
+            std::cout << "Raison: grille stable (plus d'evolution) + nombre maximum d'iterations atteint" << std::endl;
         }
         else if (stable && iteration < iterations_max + 1){
-            std::cout << "Raison: grille stable (plus d'evolution)\n" << std::endl;
+            std::cout << "Raison: grille stable (plus d'evolution)" << std::endl;
         }
         else if (!stable && iteration == iterations_max + 1){
-            std::cout << "Raison: nombre maximum d'iterations atteint\n" << std::endl;
+            std::cout << "Raison: nombre maximum d'iterations atteint" << std::endl;
         }
+        std::cout << "Nombre d'iterations: " << iteration-1 << std::endl;
+        std::cout << "Nombre maximum d'iterations: " << iterations_max << "\n" << std::endl;
     }
     catch (const std::exception& e){
         std::cerr << "Erreur dans la simulation : " << e.what() << std::endl;
