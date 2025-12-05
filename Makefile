@@ -1,34 +1,53 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -g
 TARGET = Jeu
 
-SOURCES = main.cpp Fichiers.cpp
-HEADERS = Jeu.hpp Grille.hpp Cellule.hpp Etat_cellule.hpp Etat_vivant.hpp Etat_morte.hpp Regles.hpp Fichiers.hpp
+SRCS = main.cpp Jeu.cpp Tests.cpp Grille.cpp Fichier.cpp Regles.cpp Cellule.cpp EtatMort.cpp EtatVivant.cpp Graphique.cpp
 
-OBJECTS = $(SOURCES:.cpp=.o)
+OBJS = $(SRCS:.cpp=.o)
 
-all: $(TARGET)
+SFML_VERSION = $(shell pkg-config --modversion sfml-graphics 2>/dev/null | cut -d. -f1-2)
+ifeq ($(SFML_VERSION),)
+    SFML_VERSION = 2.5
+endif
 
-$(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJECTS)
+ifeq ($(SFML_VERSION), 2.6)
+    CXXFLAGS = -g -Wall -std=c++17 -DSFML_2_6
+    SFML_FLAGS = -lsfml-graphics -lsfml-window -lsfml-system
+else
+    CXXFLAGS = -g -Wall -std=c++14 -DSFML_2_5
+    SFML_FLAGS = -lsfml-graphics -lsfml-window -lsfml-system
+endif
 
-main.o: main.cpp Fichiers.hpp
-	$(CXX) $(CXXFLAGS) -c main.cpp
+PKG_CONFIG_FLAGS = $(shell pkg-config --cflags --libs sfml-all 2>/dev/null)
+ifneq ($(PKG_CONFIG_FLAGS),)
+    SFML_FLAGS = $(PKG_CONFIG_FLAGS)
+endif
 
-Fichiers.o: Fichiers.cpp Fichiers.hpp
-	$(CXX) $(CXXFLAGS) -c Fichiers.cpp
+LDFLAGS = $(SFML_FLAGS)
+
+$(TARGET): $(OBJS)
+	$(INFO)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(TARGET) $(LDFLAGS)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+install-deps:
+	sudo apt update
+	sudo apt install -y build-essential g++ libsfml-dev
 
 clean:
-	rm -f $(OBJECTS) $(TARGET)
+	rm -f $(TARGET) $(OBJS) *.gch
 
-re: clean all
+rebuild: clean all
 
 help:
-	@echo ----------Makefile pour le Jeu de la Vie----------
-	@echo Commandes disponibles:
-	@echo make all   - Compile le projet
-	@echo make clean - Supprime les fichiers objets et l'executable
-	@echo make re    - Recompile completement
-	@echo make help  - Affiche cette aide
+	@echo "Commandes disponibles:"
+	@echo "  make          : Compile le projet"
+	@echo "  make run      : Compile et exécute"
+	@echo "  make clean    : Nettoie les fichiers compilés"
+	@echo "  make rebuild  : Recompile depuis le début"
+	@echo "  make install-deps : Installe les dépendances"
+	@echo "  make help     : Affiche cette aide"
 
-.PHONY: all clean re help
+.PHONY: all info run install-deps clean rebuild help check
