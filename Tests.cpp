@@ -8,7 +8,20 @@
 #include <vector>
 
 namespace JeuDeLaVie{
-    TestsUnitaires::TestsUnitaires(std::string fd, std::string fa, int i) : fichier_depart(fd), fichier_attendu(fa), iterations(i) {}
+
+    double TestsUnitaires::total_tests = 0;
+    double TestsUnitaires::tests_valides = 0;
+
+    TestsUnitaires::TestsUnitaires(std::string fd, std::string fa, int i) : fichier_depart(fd), fichier_attendu(fa), iterations(i) {
+        total_tests++;
+        if (estValide()){
+            std::cout << "[OK] "<< fichier_depart << " fonctionne bien (" << iterations << " iteration(s))" << std::endl;
+            tests_valides++;
+        }
+        else{
+            std::cout << "[ECHEC] Grille vide" << std::endl;
+        }
+    }
     
     bool TestsUnitaires::estValide(){
         try{
@@ -92,5 +105,13 @@ namespace JeuDeLaVie{
             std::cerr << "Erreur dans le test " << fichier_depart << ": " << e.what() << std::endl;
             return false;
         }
+    }
+
+    double TestsUnitaires::getTotalTests(){
+        return total_tests;
+    }
+
+    double TestsUnitaires::getTestsValides(){
+        return tests_valides;
     }
 }
