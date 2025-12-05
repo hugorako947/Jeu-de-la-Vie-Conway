@@ -2,13 +2,12 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "Grille.hpp"
 
 class Jeu {
 private:
+    std::string chemin_input;
     bool mode_console;
     int iterations_max;
-    std::string chemin_input;
     double pause;
     std::vector<std::string> historique;
     std::string chemin_output;
