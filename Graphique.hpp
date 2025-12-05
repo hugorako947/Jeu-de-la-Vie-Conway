@@ -14,7 +14,8 @@ namespace JeuDeLaVie {
 
         int lignes;
         int colonnes;
-        int taille_cellule = 10;
+        int taille_cellule;
+        bool enPause;  // Ajout du champ pour la pause
 
         // Méthodes internes (privées)
         void traiterEvenements();
@@ -27,5 +28,9 @@ namespace JeuDeLaVie {
         bool fenetreEstOuverte() const { return fenetre.isOpen(); }
         void mettreAJourAffichage(const Grille& grille);
         void fermer() { fenetre.close(); }
+        
+        // Méthodes pour gérer la pause
+        bool estEnPause() const { return enPause; }
+        void setPause(bool pause) { enPause = pause; }
     };
 }
