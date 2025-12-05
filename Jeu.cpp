@@ -88,6 +88,11 @@ void Jeu::simulation(){
                 }
             }
 
+            if (jeuGraphique->estEnPause()) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+                continue;
+            }
+
             stable = stabilite(etat_actuel);
             
             historique.push_back(etat_actuel);
