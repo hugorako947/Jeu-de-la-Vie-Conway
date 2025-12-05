@@ -1,5 +1,5 @@
 #pragma once
-#include "Etat.hpp"
+#include "Etat_Cellule.hpp"
 #include <memory> 
 
 namespace JeuDeLaVie {
