@@ -4,12 +4,10 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <filesystem>
 
 namespace JeuDeLaVie {
-
-    JeuGraphique::JeuGraphique(int lignes, int colonnes, float taille_cellule_initiale) 
-        : lignes(lignes), colonnes(colonnes), taille_cellule(taille_cellule_initiale) {
-        
+    JeuGraphique::JeuGraphique(int lignes, int colonnes, float taille_cellule_initiale) : lignes(lignes), colonnes(colonnes), taille_cellule(taille_cellule_initiale), enPause(false) {
         // Calculer la taille de la fenêtre
         int fenetre_largeur = colonnes * taille_cellule;
         int fenetre_hauteur = lignes * taille_cellule;
@@ -55,7 +53,13 @@ namespace JeuDeLaVie {
                         break;
                         
                     case sf::Keyboard::Space:
-                        // Espace pour mettre en pause (à implémenter si besoin)
+                        // Basculer l'état de pause
+                        enPause = !enPause;
+                        if (enPause) {
+                            std::cout << "[PAUSE] Mode graphique en pause. Appuyez sur ESPACE pour reprendre." << std::endl;
+                        } else {
+                            std::cout << "[REPRISE] Mode graphique repris." << std::endl;
+                        }
                         break;
                         
                     default:
@@ -66,26 +70,52 @@ namespace JeuDeLaVie {
     }
 
     void JeuGraphique::dessinerGrille(const Grille& grille) {
-        // Effacer l'écran avec fond noir
-        fenetre.clear(sf::Color(0, 0, 0)); // Noir
-        
-        // Dessiner les cellules vivantes
-        sf::RectangleShape celluleShape(sf::Vector2f(taille_cellule - 1, taille_cellule - 1));
-        celluleShape.setFillColor(sf::Color(255, 255, 255)); // Blanc
-        
-        for (int i = 0; i < lignes; ++i) {
-            for (int j = 0; j < colonnes; ++j) {
-                const Cellule& cellule = grille.get_cellule(i, j);
-                if (cellule.estVivante()) {
-                    celluleShape.setPosition(j * taille_cellule, i * taille_cellule);
-                    fenetre.draw(celluleShape);
-                }
+    // Effacer l'écran avec fond noir
+    fenetre.clear(sf::Color(0, 0, 0)); // Noir
+    
+    // Dessiner les cellules vivantes
+    sf::RectangleShape celluleShape(sf::Vector2f(taille_cellule - 1, taille_cellule - 1));
+    celluleShape.setFillColor(sf::Color(255, 255, 255)); // Blanc
+    
+    for (int i = 0; i < lignes; ++i) {
+        for (int j = 0; j < colonnes; ++j) {
+            const Cellule& cellule = grille.get_cellule(i, j);
+            if (cellule.estVivante()) {
+                celluleShape.setPosition(j * taille_cellule, i * taille_cellule);
+                fenetre.draw(celluleShape);
             }
         }
-        
-        // Afficher à l'écran
-        fenetre.display();
     }
+    
+    // Si en pause, afficher un indicateur visuel simple
+    if (enPause) {
+        // Fond semi-transparent
+        sf::RectangleShape overlay(sf::Vector2f(fenetre.getSize().x, fenetre.getSize().y));
+        overlay.setFillColor(sf::Color(0, 0, 0, 128)); // Noir semi-transparent
+        fenetre.draw(overlay);
+        
+        // Carré/rectangle jaune au centre comme indicateur
+        sf::RectangleShape pauseIndicator(sf::Vector2f(100, 100));
+        pauseIndicator.setFillColor(sf::Color(255, 255, 0, 200)); // Jaune semi-transparent
+        pauseIndicator.setPosition(fenetre.getSize().x/2 - 50, fenetre.getSize().y/2 - 50);
+        fenetre.draw(pauseIndicator);
+        
+        // Deux barres pour symboliser "pause" (||)
+        sf::RectangleShape bar1(sf::Vector2f(20, 60));
+        bar1.setFillColor(sf::Color::Black);
+        bar1.setPosition(fenetre.getSize().x/2 - 35, fenetre.getSize().y/2 - 30);
+        
+        sf::RectangleShape bar2(sf::Vector2f(20, 60));
+        bar2.setFillColor(sf::Color::Black);
+        bar2.setPosition(fenetre.getSize().x/2 + 15, fenetre.getSize().y/2 - 30);
+        
+        fenetre.draw(bar1);
+        fenetre.draw(bar2);
+    }
+    
+    // Afficher à l'écran
+    fenetre.display();
+}
 
     void JeuGraphique::mettreAJourAffichage(const Grille& grille) {
         // Traiter les événements (fermeture, touches, etc.)
