@@ -1,7 +1,7 @@
 #include "Cellule.hpp"
 #include "EtatMort.hpp" 
 #include "Etatvivant.hpp"
-#include "Etat.hpp"
+#include "Etat_Cellule.hpp"
 #include <memory>
 
 namespace JeuDeLaVie {
