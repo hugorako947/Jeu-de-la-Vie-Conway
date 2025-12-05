@@ -42,7 +42,7 @@ void Jeu::simulation(){
 
         JeuDeLaVie::Grille grille(lignes, colonnes);
         grille.initialiser(cellulesInitiales);
-        
+
         int iteration = 0;
         bool stable = false;
         
@@ -77,7 +77,7 @@ void Jeu::simulation(){
             
             Sleep(static_cast<DWORD>(pause * 1000));
         }
-        
+
         std::cout << "\nFIN DU JEU...\n" << std::endl;
         std::cout << "Nombre d'iterations: " << iteration-1 << std::endl;
         if (stable && iteration == iterations_max + 1){
@@ -118,59 +118,20 @@ void Jeu::tests_unitaires() {
     try {
         std::cout << "\nDEBUT DES TESTS...\n" << std::endl;
         
-        double tests_reussis = 0;
-        double total_tests = 5;
-        
         JeuDeLaVie::TestsUnitaires grille_vide("tests/grille_vide_depart.txt", "tests/grille_vide_depart.txt", 5);
-        if (grille_vide.estValide()){
-            std::cout << "[OK] Grille vide reste vide sur: 5 iterations" << std::endl;
-            tests_reussis++;
-        }
-        else{
-            std::cout << "[ECHEC] Grille vide" << std::endl;
-        }
         JeuDeLaVie::TestsUnitaires bloc_stable("tests/bloc_stable_depart.txt", "tests/bloc_stable_depart.txt", 10);
-        if (bloc_stable.estValide()){
-            std::cout << "[OK] Bloc reste stable sur: 10 iterations" << std::endl;
-            tests_reussis++;
-        }
-        else{
-            std::cout << "[ECHEC] Bloc stable" << std::endl;
-        }
         JeuDeLaVie::TestsUnitaires clignotant1("tests/clignotant_depart.txt", "tests/clignotant_attendu.txt", 1);
-        if (clignotant1.estValide()){
-            std::cout << "[OK] Clignotant apres: 1 iteration" << std::endl;
-            tests_reussis++;
-        }
-        else{
-            std::cout << "[ECHEC] Clignotant apres: 1 iteration" << std::endl;
-        }
-        JeuDeLaVie::TestsUnitaires clignotant2("tests/clignotant_depart.txt", "tests/clignotant_depart.txt", 2);
-        if (clignotant2.estValide()){
-            std::cout << "[OK] Clignotant apres: 2 iterations" << std::endl;
-            tests_reussis++;
-        }
-        else{
-            std::cout << "[ECHEC] Clignotant apres: 2 iterations" << std::endl;
-        }
+        JeuDeLaVie::TestsUnitaires clignotant2("tests/clignotant_attendu.txt", "tests/clignotant_depart.txt", 1);
         JeuDeLaVie::TestsUnitaires planeur("tests/planeur_depart.txt", "tests/planeur_attendu.txt", 4);
-        if (planeur.estValide()){
-            std::cout << "[OK] Planeur (glider) sur: 4 iterations" << std::endl;
-            tests_reussis++;
-        }
-        else{
-            std::cout << "[ECHEC] Planeur (glider)" << std::endl;
-        }
-        
+
         std::cout << "\nFIN DES TESTS...\n" << std::endl;
-        if (tests_reussis == total_tests){
-            std::cout << "Les regles de Conway sont correctement implementees\n" << std::endl;
+        double pourcentage = planeur.getTestsValides() / planeur.getTotalTests() * 100;
+        if (planeur.getTestsValides() == planeur.getTotalTests()){
+            std::cout << "Tests reussis: " << planeur.getTestsValides() << "/" << planeur.getTotalTests() << " (" << pourcentage << " %)" << " => Les regles de Conway sont correctement implementees.\n" << std::endl;
         }
         else{
-            std::cout << "Les regles de Conway sont mal implementees\n" << std::endl;
+            std::cout << "Tests reussis: " << planeur.getTestsValides() << "/" << planeur.getTotalTests() << " (" << pourcentage << " %)" << " => Les regles de Conway sont mal implementees.\n" << std::endl;
         }
-        double pourcentage = tests_reussis / total_tests * 100;
-        std::cout << "Tests reussis: " << tests_reussis << "/" << total_tests << " (" << pourcentage << " %)\n" << std::endl;
     }
     catch (const std::exception& e){
         std::cerr << "\nErreur dans les tests: " << e.what() << std::endl;
