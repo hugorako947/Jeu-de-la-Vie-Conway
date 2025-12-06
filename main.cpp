@@ -21,8 +21,8 @@ int main(){
         std::string chemin_output = "output/";
         char choix2;
         bool mode_console;
-        int iterations_max = 200;
-        double pause = 0.5;
+        int iterations_max = 1000;
+        double pause = 0;
 
         std::cout << "\nChemin de la grille initiale: "; std::cin >> chemin_input;
         JeuDeLaVie::Fichiers fichier(chemin_input, chemin_output);
@@ -36,7 +36,13 @@ int main(){
             mode_console = false;
         }
         else{
-            std::cout << "\nERREUR : Mode invalide !\n" << std::endl;
+            std::cout << "\nERREUR: Mode invalide !\n" << std::endl;
+            return 0;
+        }
+
+        std::cout << "Vitesse de lecture (seconde(s) par iterations): "; std::cin >> pause;
+        if (std::cin.fail()){
+            std::cout << "\nERREUR: Valeur invalide !" << std::endl;
             return 0;
         }
 
@@ -51,7 +57,7 @@ int main(){
 
     }
     else{
-        std::cout << "\nERREUR : Reponse invalide !\n" << std::endl;
+        std::cout << "\nERREUR: Reponse invalide !\n" << std::endl;
         return 0;
     }
     return 0;
