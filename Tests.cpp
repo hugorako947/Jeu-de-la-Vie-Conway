@@ -102,7 +102,7 @@ namespace JeuDeLaVie{
             
         }
         catch (const std::exception& e){
-            std::cerr << "Erreur dans le test " << fichier_depart << ": " << e.what() << std::endl;
+            std::cerr << "ERREUR dans le test" << fichier_depart << ": " << e.what() << std::endl;
             return false;
         }
     }
