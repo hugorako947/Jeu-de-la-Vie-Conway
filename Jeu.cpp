@@ -50,7 +50,7 @@ void Jeu::simulation(){
             try {
                 jeuGraphique = std::make_unique<JeuDeLaVie::JeuGraphique>(lignes, colonnes);
             } catch (const std::exception& e) {
-                std::cerr << "\nErreur mode graphique: " << e.what() << std::endl;
+                std::cerr << "\nERREUR dans le mode graphique: " << e.what() << std::endl;
                 std::cout << "Basculer en mode console...\n" << std::endl;
                 mode_console = true; // Basculer en mode console
             }
@@ -86,11 +86,11 @@ void Jeu::simulation(){
                 if (!jeuGraphique->fenetreEstOuverte()) {
                     break;
                 }
-            }
 
-            if (jeuGraphique->estEnPause()) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(50));
-                continue;
+                if (jeuGraphique->estEnPause()) {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+                    continue;
+                }
             }
 
             stable = stabilite(etat_actuel);
@@ -124,7 +124,7 @@ void Jeu::simulation(){
         std::cout << "Nombre maximum d'iterations: " << iterations_max << "\n" << std::endl;
     }
     catch (const std::exception& e){
-        std::cerr << "Erreur dans la simulation : " << e.what() << std::endl;
+        std::cerr << "ERREUR dans la simulation: " << e.what() << std::endl;
         std::cout << "" << std::endl;
     }
 }
@@ -167,6 +167,6 @@ void Jeu::tests_unitaires() {
         }
     }
     catch (const std::exception& e){
-        std::cerr << "\nErreur dans les tests: " << e.what() << std::endl;
+        std::cerr << "\nERREUR dans les tests: " << e.what() << std::endl;
     }
 }
