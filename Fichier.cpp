@@ -12,7 +12,7 @@ namespace JeuDeLaVie {
         std::vector<int> donnees_1d;
     
         if (!fichier.is_open()){
-            throw std::runtime_error("ERREUR : Impossible d'ouvrir le fichier " + chemin_input + " !\n");
+            throw std::runtime_error("ERREUR: Impossible d'ouvrir le fichier " + chemin_input + " !\n");
         }
 
         std::string ligne;
@@ -20,10 +20,10 @@ namespace JeuDeLaVie {
         if (std::getline(fichier, ligne)){
             std::istringstream iss(ligne);
             if (!(iss >> lignes >> colonnes)){
-                throw std::runtime_error("ERREUR : Dimensions de la grille incoherentes !\n");
+                throw std::runtime_error("ERREUR: Dimensions de la grille incoherentes !\n");
             }
         }else{
-            throw std::runtime_error("ERREUR : Fichier vide !\n");
+            throw std::runtime_error("ERREUR: Fichier vide !\n");
         }
 
         int total_cells = lignes * colonnes;
@@ -32,13 +32,13 @@ namespace JeuDeLaVie {
 
         while (fichier >> etat_cellule && cells_read < total_cells){
             if (etat_cellule != 0 && etat_cellule != 1){
-                throw std::runtime_error("ERREUR : Donnee de cellule invalide !\n");
+                throw std::runtime_error("ERREUR: Donnee de cellule invalide !\n");
             }
             donnees_1d.push_back(etat_cellule);
             cells_read++;
         }
         if (cells_read != total_cells){
-            throw std::runtime_error("ERREUR : Nombre total de cellules incoherent ! Attendu : " + std::to_string(total_cells) + ", Lu : " + std::to_string(cells_read) + "\n");
+            throw std::runtime_error("ERREUR: Nombre total de cellules incoherent ! Attendu : " + std::to_string(total_cells) + ", Lu : " + std::to_string(cells_read) + "\n");
         }
         fichier.close();
         return donnees_1d;
