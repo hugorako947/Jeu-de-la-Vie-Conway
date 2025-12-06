@@ -23,8 +23,7 @@ namespace JeuDeLaVie {
         }
         
         // Créer la fenêtre SFML
-        fenetre.create(sf::VideoMode(fenetre_largeur, fenetre_hauteur), 
-                      "Jeu de la Vie");
+        fenetre.create(sf::VideoMode(fenetre_largeur, fenetre_hauteur), "Jeu de la Vie");
         fenetre.setFramerateLimit(60);
         
         std::cout << "Fenetre: " << fenetre_largeur << " x " << fenetre_hauteur << " pixels" << std::endl;
@@ -56,9 +55,9 @@ namespace JeuDeLaVie {
                         // Basculer l'état de pause
                         enPause = !enPause;
                         if (enPause) {
-                            std::cout << "[PAUSE] Mode graphique en pause. Appuyez sur ESPACE pour reprendre." << std::endl;
+                            std::cout << "[PAUSE] Mode graphique en pause. Appuyez sur ESPACE pour reprendre.\n" << std::endl;
                         } else {
-                            std::cout << "[REPRISE] Mode graphique repris." << std::endl;
+                            std::cout << "[REPRISE] Mode graphique repris.\n" << std::endl;
                         }
                         break;
                         
