@@ -19,7 +19,7 @@ namespace JeuDeLaVie{
             tests_valides++;
         }
         else{
-            std::cout << "[ECHEC] " << fichier_depart << std::endl;
+            std::cout << "[ECHEC] " << fichier_depart << " (" << iterations << " iterations(s))" << std::endl;
         }
     }
     
