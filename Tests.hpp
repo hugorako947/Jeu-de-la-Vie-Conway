@@ -14,8 +14,6 @@ namespace JeuDeLaVie{
 
         bool estValide();
 
-        void resultat();
-
         double getTotalTests();
 
         double getTestsValides();
